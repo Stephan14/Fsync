@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message FileInfo {
+    string         path        = 1;
+    int64          size        = 2;
+    string         date        = 3;
+    string         checksum    = 4;
+    bool           executable  = 5;
+}

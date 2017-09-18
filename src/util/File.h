@@ -14,10 +14,6 @@
 
 #include <string>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/fcntl.h>
-#include <unistd.h> //for close()
 class File
 {
 
@@ -31,6 +27,8 @@ class File
         int  read(char* buffer, int pos, int size);
         int  write(char* buffer, int pos, int size);
         void close(); 
+
+        int  size();
 
     private:
         int         fd;

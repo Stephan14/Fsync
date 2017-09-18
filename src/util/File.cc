@@ -1,5 +1,9 @@
 #include "File.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/fcntl.h>
+#include <unistd.h> //for close()
 
 #include <iostream>
 
@@ -52,4 +56,12 @@ int File::write(char* buffer, int pos, int size)
     return ::write(fd, buffer, size);
 }
 
-
+int File::size()
+{
+    struct stat  st;
+    if(!path.empty() && 
+       ::stat(path.c_str(), &st) == 0) 
+        return st.st_size;
+    else
+        return -1;
+}

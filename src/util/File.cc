@@ -1,53 +1,55 @@
 #include "File.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 
 #include <iostream>
 
-using namespace std;
 
-File::File(string pt, string md):path(pt), mode(md), fd(NULL){}
+File::File(const std::string& pt, int  md):path(pt), mode(md), fd(-1){}
 File::~File(){}
 File::File(const File& other){}
 
 int File::open()
 {
-    fd = fopen(path.c_str(), mode.c_str()); //将string转化成char *
-    if(fd == NULL)
+    fd = ::open(path.c_str(), mode); //将string转化成char *
+    if(fd == -1)
     {
-        cout << "open file " << path << "failed" << endl;
-        return 0;
+        std::cout << "open file " << path << " failed" << std::endl;
+        return -1;
     }
 
-    return 1;
+    return 0;
 }
 
 void File::close()
 {
-    fclose(fd);
+    if(fd != -1)
+        ::close(fd);
 }
 
 int File::read(char* buffer, int pos, int size)
 {
-    if(fseek(fd, pos, SEEK_SET) != 0)
+    int i = 0;
+    if((::lseek(fd, pos, SEEK_SET)) == -1)
     {
-        cout << "file location failed" << endl;
+        std::cout << "file location failed" << std::endl;
         return -1;
     }
 
-    return fread(buffer, 1, size, fd);
+    int num = ::read(fd, &buffer[0], size);
+    buffer[num] = '\0';
+
+    return num;
 }
 
 int File::write(char* buffer, int pos, int size)
 {
-    if(fseek(fd, pos, SEEK_SET) != 0)
+    if(::lseek(fd, pos, SEEK_SET) == -1)
     {
-        cout << "file location failed" << endl;
+        std::cout << "file location failed" << std::endl;
         return -1;
     }
 
-    return fwrite(buffer, 1, size, fd);
+    return ::write(fd, buffer, size);
 }
 
 

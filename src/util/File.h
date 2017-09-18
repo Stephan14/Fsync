@@ -9,27 +9,32 @@
 #define _FILE_H
 //由于实际工程中使用C++中流处理文件的性能比较低
 //所以使用C语言中的文件操作代替C++中的流处理
+//并且使用open close write close等函数，不是fclose
+//fopen fwrite等函数
 
 #include <string>
-#include <stdio.h> //for FILE
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/fcntl.h>
+#include <unistd.h> //for close()
 class File
 {
 
     public:
 
-        File(std::string pt, std::string md);//一定要加std::否则编译出错
+        File(const std::string& pt, int md);//一定要加std::否则编译出错
         File(const File& other);
         ~File();
 
-        int open();
+        int  open();
+        int  read(char* buffer, int pos, int size);
+        int  write(char* buffer, int pos, int size);
         void close(); 
-        int read(char* buffer, int pos, int size);
-        int write(char* buffer, int pos, int size);
 
     private:
-        FILE*       fd;
+        int         fd;
+        int         mode;
         std::string path;
-        std::string mode;
 };
 #endif

@@ -56,7 +56,7 @@ int File::write(char* buffer, int pos, int size)
     return ::write(fd, buffer, size);
 }
 
-int File::size()
+int File::size() const
 {
     struct stat  st;
     if(!path.empty() && 
@@ -65,3 +65,14 @@ int File::size()
     else
         return -1;
 }
+
+bool File::isDir() const
+{
+   struct stat st;
+    if(!path.empty() &&
+       ::stat(path.c_str(), &st) == 0)
+        return  S_ISDIR(st.st_mode);    
+    else
+        return false;
+}
+

@@ -28,7 +28,8 @@ class File
         int  write(char* buffer, int pos, int size);
         void close(); 
 
-        int  size();
+        int  size()  const;
+        bool isDir() const;
 
     private:
         int         fd;

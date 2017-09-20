@@ -14,6 +14,11 @@
 
 #include <string>
 
+//不可以放到.cc文件中，否则测试用例编译通不过
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/fcntl.h>
+#include <unistd.h> //for close()
 class File
 {
 
@@ -26,10 +31,13 @@ class File
         int  open();
         int  read(char* buffer, int pos, int size);
         int  write(char* buffer, int pos, int size);
+        int  read(char* buffer, int size);
+        int  write(char* buffer, int size);
         void close(); 
 
         int  size()  const;
         bool isDir() const;
+        int  rename(const std::string& newPath);
 
     private:
         int         fd;

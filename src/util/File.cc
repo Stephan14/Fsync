@@ -1,12 +1,8 @@
 #include "File.h"
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/fcntl.h>
-#include <unistd.h> //for close()
-
 #include <iostream>
 
+#include <stdio.h>
 
 File::File(const std::string& pt, int  md):path(pt), mode(md), fd(-1){}
 File::~File(){}
@@ -56,6 +52,19 @@ int File::write(char* buffer, int pos, int size)
     return ::write(fd, buffer, size);
 }
 
+int File::read(char* buffer, int size)
+{
+    int num = ::read(fd, &buffer[0], size);
+    buffer[num] = '\0';
+    return num; 
+}
+
+int File::write(char* buffer, int size)
+{
+    return ::write(fd, buffer, size);
+}
+
+
 int File::size() const
 {
     struct stat  st;
@@ -76,3 +85,14 @@ bool File::isDir() const
         return false;
 }
 
+int File::rename(const std::string& newPath)
+{
+    if(::rename(path.c_str(), newPath.c_str()) == 0)
+    {
+        path = newPath;
+        return 0;
+    }
+    else
+        return -1;
+        
+}

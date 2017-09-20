@@ -13,13 +13,20 @@
 class Compress
 {
     public:
-        Compress(const std::string& path, const std::string& compressName);
+        Compress(const std::string& path, const std::string& compressPath);
         Compress(const Compress& other);
         ~Compress();
         
-        int compress();
+        bool compress();
     private:
         std::string path;
-        std::string compressName;
+        std::string compressPath;
+        size_t buffInSize;
+        size_t buffOutSize;
+        char* buffIn;
+        char* buffOut;
+
+        void allocate();
+        void free();
 };
 #endif

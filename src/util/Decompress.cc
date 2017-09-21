@@ -4,9 +4,9 @@
 
 #include <iostream>
 
-Decompress::Decompress(const std::string& path, const std::string& decompressPath):path(path),decompressPath(decompressPath),buffIn(NULL),buffOut(NULL){
-        buffInSize = ZSTD_DStreamInSize();    
-        buffOutSize = ZSTD_DStreamOutSize();  /* can always flush a full block */
+Decompress::Decompress(const std::string& path, const std::string& decompressPath):path_(path),decompressPath_(decompressPath),buffIn_(NULL),buffOut_(NULL){
+        buffInSize_ = ZSTD_DStreamInSize();    
+        buffOutSize_ = ZSTD_DStreamOutSize();  /* can always flush a full block */
 }
 
 Decompress::Decompress(const Decompress& other){}
@@ -15,22 +15,22 @@ Decompress::~Decompress(){}
 void Decompress::allocate()
 {
 
-    buffIn  = new char[buffInSize]();
-    buffOut = new char[buffOutSize]();
+    buffIn_  = new char[buffInSize_]();
+    buffOut_ = new char[buffOutSize_]();
 }
 
 void Decompress::free()
 {
-    if(buffIn != NULL)
-        delete []buffIn;
-    if(buffOut != NULL)
-        delete []buffOut;
+    if(buffIn_ != NULL)
+        delete []buffIn_;
+    if(buffOut_ != NULL)
+        delete []buffOut_;
 }
 
 bool Decompress::decompress()
 {    
-    File fin  = File(path, O_RDONLY);
-    File fout = File(decompressPath, O_WRONLY);
+    File fin  = File(path_, O_RDONLY);
+    File fout = File(decompressPath_, O_WRONLY);
 
     if(fin.isDir() || fin.size() == 0)
         return false;
@@ -49,18 +49,18 @@ bool Decompress::decompress()
             return false; 
         }
 
-        size_t read, toRead = buffInSize;
+        size_t read, toRead = buffInSize_;
         fin.open();
         fout.open();
         allocate();
         
         //读一次写多次
-        while(read = fin.read(buffIn, toRead)) 
+        while(read = fin.read(buffIn_, toRead)) 
         {
-            ZSTD_inBuffer input = { buffIn, read, 0 };
+            ZSTD_inBuffer input = { buffIn_, read, 0 };
             while(input.pos < input.size) 
             {
-                ZSTD_outBuffer output = { buffOut, buffOutSize, 0 };
+                ZSTD_outBuffer output = { buffOut_, buffOutSize_, 0 };
                 toRead = ZSTD_decompressStream(dstream, &output , &input);  
                 if(ZSTD_isError(toRead)) { 
                     std::cout << "ZSTD_decompressStream() error" << std::endl; 
@@ -69,7 +69,7 @@ bool Decompress::decompress()
                     free();
                     return false;
                 }
-                fout.write(buffOut, output.pos);
+                fout.write(buffOut_, output.pos);
             }
         }
 

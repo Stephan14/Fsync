@@ -18,12 +18,12 @@ class Decompress
 
         bool decompress(); 
     private:
-        std::string path;
-        std::string decompressPath;
-        char *buffIn;
-        char *buffOut;
-        size_t buffInSize;
-        size_t buffOutSize;
+        std::string path_;
+        std::string decompressPath_;
+        char *buffIn_;
+        char *buffOut_;
+        size_t buffInSize_;
+        size_t buffOutSize_;
         void allocate();
         void free();
 };

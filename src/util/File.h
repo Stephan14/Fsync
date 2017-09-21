@@ -40,8 +40,8 @@ class File
         int  rename(const std::string& newPath);
 
     private:
-        int         fd;
-        int         mode;
-        std::string path;
+        int         fd_;
+        int         mode_;
+        std::string path_;
 };
 #endif

@@ -19,12 +19,12 @@ class Compress
         
         bool compress();
     private:
-        std::string path;
-        std::string compressPath;
-        size_t buffInSize;
-        size_t buffOutSize;
-        char* buffIn;
-        char* buffOut;
+        std::string path_;
+        std::string compressPath_;
+        size_t buffInSize_;
+        size_t buffOutSize_;
+        char* buffIn_;
+        char* buffOut_;
 
         void allocate();
         void free();

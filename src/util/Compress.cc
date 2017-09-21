@@ -4,38 +4,38 @@
 
 #include <iostream>
 
-Compress::Compress(const std::string& path, const std::string& compressPath):path(path),compressPath(compressPath),buffIn(NULL),buffOut(NULL){
-    buffInSize = ZSTD_CStreamInSize();
-    buffOutSize = ZSTD_CStreamOutSize();
+Compress::Compress(const std::string& path, const std::string& compressPath):path_(path),compressPath_(compressPath),buffIn_(NULL),buffOut_(NULL){
+    buffInSize_ = ZSTD_CStreamInSize();
+    buffOutSize_ = ZSTD_CStreamOutSize();
 }
 
 Compress::Compress(const Compress& other){}
 
 Compress::~Compress(){
-    if(buffIn != NULL)
-        delete []buffIn;
-    if(buffOut != NULL)
-        delete []buffOut;
+    if(buffIn_ != NULL)
+        delete []buffIn_;
+    if(buffOut_ != NULL)
+        delete []buffOut_;
 }
 
 void Compress::allocate()
 {
-    buffIn = new char[buffInSize]();
-    buffOut = new char[buffOutSize]();
+    buffIn_  = new char[buffInSize_]();
+    buffOut_ = new char[buffOutSize_]();
 }
 
 void Compress::free()
 {
-    if(buffIn != NULL)
-        delete []buffIn;
-    if(buffOut != NULL)
-        delete []buffOut;
+    if(buffIn_ != NULL)
+        delete []buffIn_;
+    if(buffOut_ != NULL)
+        delete []buffOut_;
 }
 
 bool Compress::compress()
 {
-    File fin(path, O_RDONLY);
-    File fout(compressPath + "temp", O_WRONLY); 
+    File fin(path_, O_RDONLY);
+    File fout(compressPath_ + "temp", O_WRONLY); 
 
     if(fin.isDir() || fin.size() == 0)
         return false;
@@ -54,17 +54,17 @@ bool Compress::compress()
             return false;
         }
         
-        size_t read, toRead = buffInSize;
+        size_t read, toRead = buffInSize_;
         fin.open();
         fout.open();
         allocate();
 
-        while(read = fin.read(buffIn, toRead))
+        while(read = fin.read(buffIn_, toRead))
         {
-            ZSTD_inBuffer input = { buffIn, buffInSize, 0};
+            ZSTD_inBuffer input = { buffIn_, buffInSize_, 0};
             while(input.pos < input.size) 
             {
-                ZSTD_outBuffer output = { buffOut, buffOutSize, 0};
+                ZSTD_outBuffer output = { buffOut_, buffOutSize_, 0};
                 size_t toRead = ZSTD_compressStream(cstream, &output, &input);
                 if(ZSTD_isError(toRead))
                 {
@@ -74,25 +74,24 @@ bool Compress::compress()
                     free();
                     return false;
                 }
-                if(toRead > buffInSize)
-                    toRead = buffInSize;
-                fout.write(buffOut, output.pos); 
+                if(toRead > buffInSize_)
+                    toRead = buffInSize_;
+                fout.write(buffOut_, output.pos); 
             }
         }
 
-        ZSTD_outBuffer output = { buffOut, buffOutSize, 0};
+        ZSTD_outBuffer output = { buffOut_, buffOutSize_, 0};
         const size_t remainingToflush =  ZSTD_endStream(cstream, &output);
         if(remainingToflush)
             std::cout << "not fully flushed"<< std::endl;
-        fout.write(buffOut, output.pos); 
+        fout.write(buffOut_, output.pos); 
         ZSTD_freeCStream(cstream);
         
-        fin.rename(compressPath );
+        fin.rename(compressPath_ );
         fin.close();
         fout.close();
         free();
         return true;
     }
 }
-
 

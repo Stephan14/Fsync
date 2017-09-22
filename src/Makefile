@@ -27,8 +27,6 @@ vpath %.proto $(PROTOS_PATH)
 all: server_main 
 
 server_main: Server.pb.o Server.grpc.pb.o FileServer.o server_main.o
-
-server_main:  
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 .PRECIOUS: %.grpc.pb.cc
@@ -39,5 +37,6 @@ server_main:
 %.pb.cc: %.proto
 	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=. $<
 
+.PHONY: clean
 clean:
-	rm -f *.o *.pb.cc *.pb.h server_main
+	-rm -f *.o *.pb.cc *.pb.h server_main

@@ -1,6 +1,5 @@
 #include "FileServer.h"
 
-#include <iostream>
     
 using grpc::ServerContext;
 using grpc::ServerWriter;

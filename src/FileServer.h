@@ -16,7 +16,6 @@
 #include <grpc++/security/server_credentials.h>
 
 
-#include "Server.pb.h"
 #include "Server.grpc.pb.h"
 
 

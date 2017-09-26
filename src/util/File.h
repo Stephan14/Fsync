@@ -24,7 +24,8 @@ class File
 
     public:
 
-        File(const std::string& pt, int md);//一定要加std::否则编译出错
+        File(const std::string& pt, char* md);//一定要加std::否则编译出错
+        File(const std::string& pt);
         File(const File& other);
         ~File();
 
@@ -38,10 +39,11 @@ class File
         int  size()  const;
         bool isDir() const;
         int  rename(const std::string& newPath);
+        int  isExist() const;
 
     private:
-        int         fd_;
-        int         mode_;
+        FILE*       fd_;
+        char*       mode_;
         std::string path_;
 };
 #endif

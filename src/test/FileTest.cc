@@ -5,7 +5,7 @@
 
 TEST(FileConstructionTest, PointTest)
 {
-    File* f = new File("test.txt", O_RDONLY); 
+    File* f = new File("test.txt", (char*)"r"); 
     ASSERT_TRUE(f != NULL);
     delete f;
 }
@@ -13,7 +13,7 @@ TEST(FileConstructionTest, PointTest)
 
 TEST(FileOpenTest, OpenSuccess)
 {
-    File* f = new File("test.txt", O_RDONLY); 
+    File* f = new File("test.txt", (char*)"r"); 
     ASSERT_EQ(f->open(), 0); 
     f->close();
     delete f;
@@ -21,7 +21,7 @@ TEST(FileOpenTest, OpenSuccess)
 
 TEST(FileOpenTest, OpenFailed)
 {
-    File* f = new File("test2.txt", O_RDONLY); 
+    File* f = new File("test2.txt", (char*)"r"); 
     ASSERT_EQ(f->open(), -1); 
     f->close();
     delete f;
@@ -29,20 +29,23 @@ TEST(FileOpenTest, OpenFailed)
 
 TEST(FileReadTest, StringRead)
 {
-    File* f = new File("test.txt", O_RDONLY); 
+    File* f = new File("test.txt", (char*)"r"); 
     ASSERT_EQ(f->open(), 0); 
     char buf[10];
     EXPECT_EQ(f->read(buf, 0, 3), 3);
+    buf[3] = '\0';
+    std::string s(buf);
+    std::cout << s.size() << ":" << s << std::endl;
     f->close();
     delete f;
 }
 
 TEST(FileWriteTest, StringWrite)
 {
-    File* f = new File("test.txt", O_WRONLY); 
+    File* f = new File("test.txt", (char*)"w"); 
     f->open(); 
-    char buf[10] = "abc";
-    ASSERT_EQ(f->write(buf, 14, 3), 3);
+    char buf[10] = "abcedg";
+    ASSERT_EQ(f->write(buf, 14, 6), 6);
     f->close();
     delete f;
 }

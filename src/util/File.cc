@@ -3,15 +3,21 @@
 #include <iostream>
 
 #include <stdio.h>
+#include <string.h>
 
-File::File(const std::string& pt, int  md):path_(pt), mode_(md), fd_(-1){}
+File::File(const std::string& pt, char* md):path_(pt), fd_(NULL)
+{
+    mode_ = new char[strlen(md) + 1];//注意长度
+    strcpy(mode_, md); //不用考虑\0   
+}
+File::File(const std::string& pt):path_(pt), fd_(NULL){}
 File::~File(){}
 File::File(const File& other){}
 
 int File::open()
 {
-    fd_ = ::open(path_.c_str(), mode_); //将string转化成char *
-    if(fd_ == -1)
+    fd_ = ::fopen(path_.c_str(), mode_); //将string转化成char *
+    if(!fd_)
     {
         std::cout << "open file " << path_ << " failed" << std::endl;
         return -1;
@@ -22,46 +28,46 @@ int File::open()
 
 void File::close()
 {
-    if(fd_ != -1)
-        ::close(fd_);
+    if(fd_)
+        ::fclose(fd_);
 }
 
 int File::read(char* buffer, int pos, int size)
 {
     int i = 0;
-    if((::lseek(fd_, pos, SEEK_SET)) == -1)
+    if((::fseek(fd_, pos, SEEK_SET)) != 0)
     {
         std::cout << "file location failed" << std::endl;
         return -1;
     }
 
-    int num = ::read(fd_, &buffer[0], size);
-    buffer[num] = '\0';
+    int num = ::fread(&buffer[0], sizeof(char), size, fd_);
+    //buffer[num] = '\0';
 
     return num;
 }
 
 int File::write(char* buffer, int pos, int size)
 {
-    if(::lseek(fd_, pos, SEEK_SET) == -1)
+    if(::fseek(fd_, pos, SEEK_SET) != 0)
     {
         std::cout << "file location failed" << std::endl;
         return -1;
     }
 
-    return ::write(fd_, buffer, size);
+    return ::fwrite(&buffer[0], sizeof(char), size, fd_);
 }
 
 int File::read(char* buffer, int size)
 {
-    int num = ::read(fd_, &buffer[0], size);
-    buffer[num] = '\0';
+    int num = ::fread(&buffer[0], sizeof(char), size, fd_);//当num返回值为0时说明已经到达文件尾了
+    //buffer[num] = '\0';
     return num; 
 }
 
 int File::write(char* buffer, int size)
 {
-    return ::write(fd_, buffer, size);
+    return ::fwrite(&buffer[0], sizeof(char), size, fd_);
 }
 
 
@@ -95,4 +101,12 @@ int File::rename(const std::string& newpath)
     else
         return -1;
         
+}
+
+int File::isExist() const
+{
+    if(::access(path_.c_str(), F_OK) == 0) 
+        return true;
+    else
+        return false;
 }

@@ -65,6 +65,30 @@ TEST(FileExistTest, FileIsnotExist)
     delete f;
 }
 
+TEST(ReadFileLineTest, ReadALine)
+{
+    File* f = new File("test3.txt", (char*)"r"); 
+    ASSERT_EQ(f->open(), 0); 
+    char buffer[1000];
+    ASSERT_TRUE(f->getLine(buffer, 15));
+    std::string s(buffer);
+    std::cout << s.size() << ":" << s << std::endl; 
+    f->close();
+    delete f;
+}
+
+TEST(ReadFileLineTest, ReadNoLine)
+{
+    File* f = new File("test2.txt", (char*)"r"); 
+    ASSERT_EQ(f->open(), 0); 
+    char buffer[1000];
+    ASSERT_FALSE(f->getLine(buffer, 15));
+    std::string s(buffer);
+    std::cout << s.size() << ":" << s << std::endl; 
+    f->close();
+    delete f;
+}
+
 int main(int argc, char* argv[])
 {
         testing::InitGoogleTest(&argc, argv);

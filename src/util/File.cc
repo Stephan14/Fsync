@@ -103,10 +103,18 @@ int File::rename(const std::string& newpath)
         
 }
 
-int File::isExist() const
+bool File::isExist() const
 {
     if(::access(path_.c_str(), F_OK) == 0) 
         return true;
     else
         return false;
+}
+
+bool File::getLine(char *buffer, size_t size) const
+{
+    if(::fgets(buffer, size, fd_) == NULL) 
+        return false;
+    else
+        return true;
 }

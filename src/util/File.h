@@ -39,7 +39,8 @@ class File
         int  size()  const;
         bool isDir() const;
         int  rename(const std::string& newPath);
-        int  isExist() const;
+        bool isExist() const;
+        bool getLine(char* buffer, size_t size) const;
 
     private:
         FILE*       fd_;

@@ -24,9 +24,15 @@ PROTOS_PATH = ../proto
 
 vpath %.proto $(PROTOS_PATH)
 
-all: server_main 
+all: server_main client_main test_all
 
 server_main: Server.pb.o Server.grpc.pb.o FileServer.o server_main.o
+	$(CXX) $^ $(LDFLAGS) -o $@
+
+client_main: Server.pb.o Server.grpc.pb.o FileClient.o client_main.o
+	$(CXX) $^ $(LDFLAGS) -o $@
+
+test_all: Server.pb.o Server.grpc.pb.o util/File.o Prepare.o 
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 .PRECIOUS: %.grpc.pb.cc

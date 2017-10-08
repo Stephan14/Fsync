@@ -13,6 +13,7 @@
 //fopen fwrite等函数
 
 #include <string>
+#include <vector>
 
 //不可以放到.cc文件中，否则测试用例编译通不过
 #include <sys/types.h>

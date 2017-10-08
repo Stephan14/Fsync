@@ -118,3 +118,4 @@ bool File::getLine(char *buffer, size_t size) const
     else
         return true;
 }
+

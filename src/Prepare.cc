@@ -28,6 +28,7 @@ bool getAllFiles(const std::string& path, std::vector<std::string>& allFiles)
         else if(dirOrFileMsg->d_type == 8)
             allFiles.push_back(path + fileName);
     }
+
     return true;
 }
 
@@ -77,7 +78,7 @@ void indexFileName(std::vector<std::string>& allFiles, std::map<std::string, std
         {
             std::string fileName = getZstdFileName(*it);
             std::string fileTimestamp = getZstdFileTimestamp(*it);
-            createOrInsertFileNameAndTimestamp(allIndexedFiles, fileName, timestamp);
+            createOrInsertFileNameAndTimestamp(allIndexedFiles, fileName, fileTimestamp);
         }
         else
             createOrInsertFileNameAndTimestamp(allIndexedFiles, *it, "");
@@ -110,21 +111,22 @@ bool Prepare::loadZstdFile(const File& path, std::map<std::string, FileInfo>& in
     return true;
     
 }
+
 bool Prepare::getAllFileInfo(const File& path, std::map<std::string, FileInfo>& infoMap) const
 {
     return true;
 }
 
-int main()
-{
-    std::vector<std::string> files;
-    if(getAllFiles("/Users/zoushengfu/Documents/code/Fsync/src/", files))
-        if(!files.empty())
-            for(auto file : files)
-                std::cout << file << std::endl;
-        else
-            std::cout << "ssile" << std::endl;
-    
-   std::cout << "file" << std::endl;
-    return 0;
-}
+//int main()
+//{
+//    std::vector<std::string> files;
+//    if(getAllFiles("./", files))
+//        if(!files.empty())
+//            for(auto file : files)
+//                std::cout << file << std::endl;
+//        else
+//            std::cout << "ssile" << std::endl;
+//    
+//   std::cout << "file" << std::endl;
+//    return 0;
+//}

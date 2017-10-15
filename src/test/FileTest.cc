@@ -10,7 +10,6 @@ TEST(FileConstructionTest, PointTest)
     delete f;
 }
 
-
 TEST(FileOpenTest, OpenSuccess)
 {
     File* f = new File("test.txt", (char*)"r"); 
@@ -56,7 +55,6 @@ TEST(FileExistTest, FileExist)
     ASSERT_TRUE(f->isExist());
     delete f;
 }
-
 
 TEST(FileExistTest, FileIsnotExist)
 {

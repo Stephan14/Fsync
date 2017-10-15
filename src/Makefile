@@ -9,11 +9,11 @@ CXXFLAGS += -std=c++11
 ifeq ($(SYSTEM),Darwin)
 	LDFLAGS += -L/usr/local/lib `pkg-config --libs protobuf grpc++ grpc`\
 			   -lgrpc++_reflection\
-			   -ldl
+			   -ldl -gtest
 else
 	LDFLAGS += -L/usr/local/lib `pkg-config --libs protobuf grpc++ grpc`\
 			   -Wl,--no-as-needed -lgrpc++_reflection -Wl,--as-needed\
-			   -ldl
+			   -ldl -gtest
 endif
 
 PROTOC = protoc 
@@ -24,7 +24,7 @@ PROTOS_PATH = ../proto
 
 vpath %.proto $(PROTOS_PATH)
 
-all: server_main client_main test_all
+all: server_main client_main preparetest 
 
 server_main: Server.pb.o Server.grpc.pb.o FileServer.o server_main.o
 	$(CXX) $^ $(LDFLAGS) -o $@
@@ -32,7 +32,7 @@ server_main: Server.pb.o Server.grpc.pb.o FileServer.o server_main.o
 client_main: Server.pb.o Server.grpc.pb.o FileClient.o client_main.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
-test_all: Server.pb.o Server.grpc.pb.o util/File.o Prepare.o 
+preparetest: test/PrepareTest.o Server.pb.o Server.grpc.pb.o util/File.o Prepare.o 
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 .PRECIOUS: %.grpc.pb.cc

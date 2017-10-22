@@ -1,3 +1,6 @@
+#ifndef _PREPARE_H
+#define _PREPARE_H
+
 #include "Server.pb.h"
 #include "util/File.h"
 
@@ -27,3 +30,4 @@ class Prepare
 
     std::string path;
 };
+#endif

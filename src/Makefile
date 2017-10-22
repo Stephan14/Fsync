@@ -7,9 +7,10 @@ CXX = g++
 #设置编译选项
 CXXFLAGS += -std=c++11
 
+#设置预编译器选项
 #CPPFLAGS += ./ 设置查找头文件
 
-#设置库的查找路径
+#设置链接器的参数，库的查找路径
 LDFLAGS += -L /usr/local/lib 
 
 #设置动态搜索路径
@@ -43,7 +44,6 @@ CLIENT_OBJS += $(patsubst %.cc, $(OBJSDIR)/%.o, $(CLIENT_SRCS))
 #设置依赖文件
 DEPS += util/object/File.o 
 
-#$(MAKE) -C./util 
 
 PROTOC = protoc 
 GRPC_CPP_PLUGIN = grpc_cpp_plugin 
@@ -55,7 +55,16 @@ PROTOS_PATH = ../proto
 vpath %.proto $(PROTOS_PATH)
 vpath %.cc ./ 
 
-all: server_main client_main #preparetest 
+#子目录名字
+SUBDIRS +=  ./util
+
+all: $(SUBDIRS) server_main client_main #preparetest 
+
+$(SUBDIRS): echo
+	$(MAKE) -C $@ 
+
+echo: 
+	@echo $(SUBDIRS)
 
 server_main: $(SERVER_OBJS) 
 	$(CXX) $^ $(LDFLAGS)  $(CXXFLAGS) $(LIBS) $(DEPS) -o $@

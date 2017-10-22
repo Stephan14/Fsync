@@ -26,10 +26,24 @@ ifeq ($(SYSTEM),Darwin)
 			-ldl 
 	endif
 
-#设置目标文件
-OBJS += Server.pb.o Server.grpc.pb.o
+#扫描制定路径设置源文件
+SRCS += Server.grpc.pb.cc Server.pb.cc 
+SRCS += $(wildcard *.cc)
+CLIENT_SOURCE += FileClient.cc client_main.cc
+SERVER_SOURCE += FileServer.cc server_main.cc
+SERVER_SRCS += $(filter-out $(CLIENT_SOURCE), $(SRCS))
+CLIENT_SRCS += $(filter-out $(SERVER_SOURCE), $(SRCS))
 
-$(MAKE) -C ./util M=./
+#设置目标文件
+OBJSDIR += object
+#OBJS += $(addprefix $(OBJSDIR), $(patsubst %.cc, %.o, $(SRCS))) #匹配替换并添加前缀
+SERVER_OBJS += $(patsubst %.cc, $(OBJSDIR)/%.o, $(SERVER_SRCS))
+CLIENT_OBJS += $(patsubst %.cc, $(OBJSDIR)/%.o, $(CLIENT_SRCS))
+
+#设置依赖文件
+DEPS += util/object/File.o 
+
+#$(MAKE) -C./util 
 
 PROTOC = protoc 
 GRPC_CPP_PLUGIN = grpc_cpp_plugin 
@@ -37,19 +51,34 @@ GRPC_CPP_PLUGIN_PATH ?= `which $(GRPC_CPP_PLUGIN)`
 
 PROTOS_PATH = ../proto 
 
+#制定查找文件的路径
 vpath %.proto $(PROTOS_PATH)
+vpath %.cc ./ 
 
-all: server_main client_main preparetest 
+all: server_main client_main #preparetest 
 
-server_main: $(OBJS) FileServer.o server_main.o
-	$(CXX) $^ $(LDFLAGS)  $(LIBS) -o $@
+server_main: $(SERVER_OBJS) 
+	$(CXX) $^ $(LDFLAGS)  $(CXXFLAGS) $(LIBS) $(DEPS) -o $@
 
-client_main: $(OBJS) FileClient.o client_main.o
-	$(CXX) $^ $(LDFLAGS)  $(LIBS) -o $@
+client_main: $(CLIENT_OBJS) 
+	$(CXX) $^ $(LDFLAGS)  $(CXXFLAGS) $(LIBS) $(DEPS) -o $@
 
-preparetest: $(OBJS) test/PrepareTest.o util/File.o Prepare.o  
-	$(CXX) $^ $(LDFLAGS) $(LIBS) -lgtest -o $@
+#定义函数
+#define complie_cc_file
+#@for file in $(SRCS); do\
+#	(echo "$(CXX) $(LDFLAGS) $(CXXFLAGS) $(LIBS) $(DEPS) $$file -o $@ " && $(CXX) $(LDFLAGS) $(CXXFLAGS) $(LIBS) $(DEPS) $$file -o $@)\
+#done;
+#endef
 
+$(OBJSDIR)/%.o : %.cc 
+	#调用函数
+	#$(call complie_cc_file)	
+	$(CXX) -c $< $(LDFLAGS)  $(CXXFLAGS) $(LIBS)  -o $@
+
+#preparetest: $(OBJS) test/PrepareTest util/File.o Prepare.o  
+#	$(CXX) $^ $(LDFLAGS) $(LIBS) -lgtest -o $@
+
+#防止中间目标文件，设置需要保留的中间目标文件
 .PRECIOUS: %.grpc.pb.cc
 %.grpc.pb.cc: %.proto
 	$(PROTOC) -I $(PROTOS_PATH) --grpc_out=. --plugin=protoc-gen-grpc=$(GRPC_CPP_PLUGIN_PATH) $<
@@ -60,4 +89,4 @@ preparetest: $(OBJS) test/PrepareTest.o util/File.o Prepare.o
 
 .PHONY: clean
 clean:
-	-rm -f *.o *.pb.cc *.pb.h server_main
+	-rm -f object/*.o  server_main

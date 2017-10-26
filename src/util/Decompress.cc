@@ -30,7 +30,7 @@ void Decompress::free()
 bool Decompress::decompress()
 {    
     File fin  = File(path_, O_RDONLY);
-    File fout = File(decompressPath_, O_WRONLY);
+    File fout = File(decompressPath_, (char*)"w");
 
     if(fin.isDir() || fin.size() == 0)
         return false;

@@ -21,11 +21,11 @@ ifeq ($(SYSTEM),Darwin)
 	LIBS += `pkg-config --libs protobuf grpc++ grpc`\
 			-lgrpc++_reflection\
 			-ldl 
-	else
+else
 	LIBS += `pkg-config --libs protobuf grpc++ grpc`\
 			-Wl,--no-as-needed -lgrpc++_reflection -Wl,--as-needed\
 			-ldl 
-	endif
+endif
 
 #扫描制定路径设置源文件
 SRCS += Server.grpc.pb.cc Server.pb.cc 
@@ -80,12 +80,9 @@ client_main: $(CLIENT_OBJS)
 #endef
 
 $(OBJSDIR)/%.o : %.cc 
-	#调用函数
-	#$(call complie_cc_file)	
-	$(CXX) -c $< $(LDFLAGS)  $(CXXFLAGS) $(LIBS)  -o $@
+	#$(call complie_cc_file)#调用函数
+	$(CXX) -c $<  $(CXXFLAGS) -o $@
 
-#preparetest: $(OBJS) test/PrepareTest util/File.o Prepare.o  
-#	$(CXX) $^ $(LDFLAGS) $(LIBS) -lgtest -o $@
 
 #防止中间目标文件，设置需要保留的中间目标文件
 .PRECIOUS: %.grpc.pb.cc
@@ -98,4 +95,4 @@ $(OBJSDIR)/%.o : %.cc
 
 .PHONY: clean
 clean:
-	-rm -f object/*.o  server_main
+	-rm -f object/*.o  server_main#忽略当前行命名执行时遇到的错误

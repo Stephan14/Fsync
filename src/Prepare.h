@@ -13,8 +13,8 @@ bool getAllFiles(const std::string& path, std::vector<std::string>& allFiles);
 bool isZstdFile(const std::string& path);
 std::string getZstdFileName(const std::string& path);
 std::string getZstdFileTimestamp(const std::string& path);
-void createOrInsertFileNameAndTimestamp(std::map<std::string, std::vector<std::string>>& allIndexedFiles, const std::string& fileName, const std::string& timestamp);
-void indexFileName(std::vector<std::string>& allFiles, std::map<std::string, std::vector<std::string>>& allIndexedFiles);
+void createOrInsertFileNameAndTimestamp(std::map<std::string, std::vector<std::string> >& allIndexedFiles, const std::string& fileName, const std::string& timestamp);
+void indexFileName(std::vector<std::string>& allFiles, std::map<std::string, std::vector<std::string> >& allIndexedFiles);
 
 
 class Prepare

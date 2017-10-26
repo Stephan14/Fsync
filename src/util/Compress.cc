@@ -35,7 +35,7 @@ void Compress::free()
 bool Compress::compress()
 {
     File fin(path_, O_RDONLY);
-    File fout(compressPath_ + "temp", O_WRONLY); 
+    File fout(compressPath_ + "temp", (char*)"w"); 
 
     if(fin.isDir() || fin.size() == 0)
         return false;

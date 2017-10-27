@@ -3,6 +3,8 @@ SYSTEM ?= $(HOST_SYSTEM)
 
 CXX = g++
 
+OBJSDIR = object
+
 ifeq ($(SYSTEM),Darwin)
 	LIBS += `pkg-config --libs protobuf grpc++ grpc`\
 			-lgrpc++_reflection\
@@ -13,12 +15,19 @@ else
 			-ldl 
 endif
 
-.PHONY: all
+.PHONY: all clean
 all: FileTest PrepareTest
 
-FileTest: FileTest.o ../util/object/File.o
+FileTest: $(OBJSDIR)/FileTest.o ../util/object/File.o
 	$(CXX) $^ -o $@ -lgtest
 
-PrepareTest:  PrepareTest.o  ../object/Prepare.o ../util/object/File.o ../object/Server.pb.o 
-	$(CXX)  $^  $(LIBS) -o $@  -lgtest -std=c++11 
+PrepareTest:  $(OBJSDIR)/PrepareTest.o  ../object/Prepare.o ../util/object/File.o ../object/Server.pb.o 
+	$(CXX)  $^  $(LIBS) -o $@  -lgtest -std=c++11  -g
+
+$(OBJSDIR)/%.o : %.cc 
+	$(CXX) -c $<  -std=c++11 -o $@
+
+clean:
+	rm object/*.o
+
 

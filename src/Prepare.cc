@@ -7,43 +7,37 @@
 
 using FileServerInternal::FileInfo;
 
-bool getAllFiles(const std::string& path, std::vector<std::string>& allFiles)
-{
+bool GetAllFiles(const std::string& path, std::vector<std::string>& all_files) {
     DIR *dir;
-    struct dirent *dirOrFileMsg;
+    struct dirent *file_msg;
 
-    if((dir = opendir(path.c_str())) == NULL)
-    {
+    if ((dir = opendir(path.c_str())) == NULL) {
         std::cout << "open directory " << path.c_str() << " failed!" << std::endl;
         return false;
     }
-    
-    while((dirOrFileMsg = readdir(dir)) != NULL)
-    {
-        std::string fileName(dirOrFileMsg->d_name);
-        if(fileName== "." || fileName== "..")
+     
+    while ((file_msg = readdir(dir)) != NULL) {
+        std::string file_name(file_msg->d_name);
+        if(file_name== "." || file_name== "..")
             continue;
-        else if(dirOrFileMsg->d_type == 4)
-            getAllFiles(path + fileName + "/", allFiles);
-        else if(dirOrFileMsg->d_type == 8)
-            allFiles.push_back(path + fileName);
+        else if(file_msg->d_type == 4)
+            GetAllFiles(path + file_name + "/", all_files);
+        else if(file_msg->d_type == 8)
+            all_files.push_back(path + file_name);
     }
 
     return true;
 }
 
-bool isZstdFile(const std::string& path) 
-{
+bool IsZstdFile(const std::string& path) {
     auto const pos = path.find_last_of('.');
     if(std::string::npos != pos  && path.substr(pos + 1) == "zst") 
         return true;
     else
         return false;
-
 }
 
-std::string getZstdFileName(const std::string& path)
-{
+std::string GetZstdFileName(const std::string& path) {
     auto const pos = path.find_first_of("_");
     if(pos == std::string::npos)
         return "";
@@ -51,37 +45,34 @@ std::string getZstdFileName(const std::string& path)
         return path.substr(0, pos);
 }
 
-std::string getZstdFileTimestamp(const std::string& path)
-{
+std::string GetZstdFileTimestamp(const std::string& path) {
     auto const pos = path.find_first_of("_");
     if(pos == std::string::npos)
         return "";
     else
-        return path.substr(pos + 1, 14); //TODO 根据时间戳长度进行修改
+        return path.substr(pos + 1, 4); //TODO 根据时间戳长度进行修改
 }
 
-void createOrInsertFileNameAndTimestamp(std::map<std::string, std::vector<std::string>>& allIndexedFiles, const std::string& fileName, const std::string& timestamp)
-{
-    if(allIndexedFiles.count(fileName) != 0 && !timestamp.empty())
-        allIndexedFiles[fileName].push_back(timestamp);//TODO优化push_back
+void CreateOrInsertFileNameAndTimestamp(std::map<std::string, std::vector<std::string>>& all_indexed_files, const std::string& file_name, const std::string& timestamp) {
+    if(all_indexed_files.count(file_name) != 0 && !timestamp.empty())
+        all_indexed_files[file_name].push_back(timestamp);//TODO优化push_back
     else if(!timestamp.empty())
-        allIndexedFiles[fileName] = std::vector<std::string>(1, timestamp);
+        all_indexed_files[file_name] = std::vector<std::string>(1, timestamp);
     else
-        allIndexedFiles[fileName] = std::vector<std::string>();
+        all_indexed_files[file_name] = std::vector<std::string>();
 }
 
-void indexFileName(std::vector<std::string>& allFiles, std::map<std::string, std::vector<std::string>>& allIndexedFiles)
+void IndexFileName(std::vector<std::string>& all_files, std::map<std::string, std::vector<std::string>>& all_indexed_files)
 {
-    for(std::vector<std::string>::const_iterator it = allFiles.begin(); it != allFiles.end(); ++it)  
-    {
-        if(isZstdFile(*it)) 
-        {
-            std::string fileName = getZstdFileName(*it);
-            std::string fileTimestamp = getZstdFileTimestamp(*it);
-            createOrInsertFileNameAndTimestamp(allIndexedFiles, fileName, fileTimestamp);
+    for(std::vector<std::string>::const_iterator it = all_files.begin(); it != all_files.end(); ++it) {
+        if(IsZstdFile(*it)) {
+            std::string file_name = GetZstdFileName(*it);
+            std::string file_timestamp = GetZstdFileTimestamp(*it);
+            CreateOrInsertFileNameAndTimestamp(all_indexed_files, file_name, file_timestamp);
+        } else {
+            CreateOrInsertFileNameAndTimestamp(all_indexed_files, *it, "");
+
         }
-        else
-            createOrInsertFileNameAndTimestamp(allIndexedFiles, *it, "");
     }
 }
 

@@ -4,8 +4,8 @@ package FileServerInternal;
 
 service Server
 {
-    rpc getCompressedFile(ClientRequest) returns (stream FileInfo){}
-    rpc getFileInfoVector(ClientRequest) returns (stream Chunk){}
+    rpc GetCompressedFile(ClientRequest) returns (stream FileInfo){}
+    rpc GetFileInfoVector(ClientRequest) returns (stream Chunk){}
 }
 
 message ClientRequest
@@ -14,18 +14,18 @@ message ClientRequest
 
 message Chunk
 {
-        int64          pos             = 1;
-        string         path            = 2;
-        string         date            = 3;
-        int32          buffer          = 4;
-        int64          buffer_size     = 5;
+        int64          pos_             = 1;
+        string         path_            = 2;
+        string         date_            = 3;
+        int32          buffer_          = 4;
+        int64          buffer_size_     = 5;
 }
 
 message FileInfo 
 {
-        string         path        = 1;
-        int64          size        = 2;
-        string         date        = 3;
-        string         checksum    = 4;
-        bool           executable  = 5;
+        string         path_        = 1;
+        int64          size_        = 2;
+        string         date_        = 3;
+        string         checksum_    = 4;
+        bool           executable_  = 5;
 }

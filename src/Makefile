@@ -85,13 +85,14 @@ $(OBJSDIR)/%.o : %.cc
 
 
 #防止中间目标文件，设置需要保留的中间目标文件
-.PRECIOUS: %.grpc.pb.cc
-%.grpc.pb.cc: %.proto
-	$(PROTOC) -I $(PROTOS_PATH) --grpc_out=. --plugin=protoc-gen-grpc=$(GRPC_CPP_PLUGIN_PATH) $<
-
-.PRECIOUS: %.pb.cc
-%.pb.cc: %.proto
-	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=. $<
+#.PRECIOUS: %.grpc.pb.cc
+#%.grpc.pb.cc: %.proto
+#	$(PROTOC) -I $(PROTOS_PATH) --grpc_out=. --plugin=protoc-gen-grpc=$(GRPC_CPP_PLUGIN_PATH) $<
+#
+#.PRECIOUS: %.pb.cc
+#%.pb.cc: %.proto
+#	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=. $<
+#
 
 .PHONY: clean
 clean:

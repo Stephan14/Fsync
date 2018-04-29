@@ -5,11 +5,14 @@ CXXFLAGS += -std=c++11
 LDFLAGS += -L /usr/local/lib 
 
 SRCS += $(wildcard *.cc)
-OBJSDIR += object
+OBJSDIR += .obj
 OBJS += $(patsubst %.cc, $(OBJSDIR)/%.o, $(SRCS))
 
-all : $(OBJS)
+MAKE_OBJECT_DIR := $(shell mkdir -p $(OBJSDIR))
+
+all : $(MAKE_OBJECT_DIR) $(OBJS)
 	@echo "create object files"
+
 
 $(OBJSDIR)/%.o : %.cc 
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -17,4 +20,4 @@ $(OBJSDIR)/%.o : %.cc
 
 .PHONY: clean
 clean:
-	-rm -f object/*.o
+	-rm -f .obj/*.o

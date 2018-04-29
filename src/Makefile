@@ -36,13 +36,14 @@ SERVER_SRCS += $(filter-out $(CLIENT_SOURCE), $(SRCS))
 CLIENT_SRCS += $(filter-out $(SERVER_SOURCE), $(SRCS))
 
 #设置目标文件
-OBJSDIR += object
+OBJSDIR += .obj
+MAKE_OBJECT_DIR := $(shell mkdir -p $(OBJSDIR))
 #OBJS += $(addprefix $(OBJSDIR), $(patsubst %.cc, %.o, $(SRCS))) #匹配替换并添加前缀
 SERVER_OBJS += $(patsubst %.cc, $(OBJSDIR)/%.o, $(SERVER_SRCS))
 CLIENT_OBJS += $(patsubst %.cc, $(OBJSDIR)/%.o, $(CLIENT_SRCS))
 
 #设置依赖文件
-DEPS += util/object/File.o 
+DEPS += util/.obj/File.o 
 
 
 PROTOC = protoc 
@@ -58,7 +59,7 @@ vpath %.cc ./
 #子目录名字
 SUBDIRS +=  ./util
 
-all: $(SUBDIRS) server_main client_main #preparetest 
+all: $(MAKE_OBJECT_DIR) $(SUBDIRS) server_main client_main #preparetest 
 
 $(SUBDIRS): echo
 	$(MAKE) -C $@ 

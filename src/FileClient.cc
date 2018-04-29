@@ -20,12 +20,12 @@ void FileClient::getCompressedFile()
 {
     ClientContext context;
     ClientRequest request;
-    std::unique_ptr<ClientReader<FileInfo>> writer(stub_->getCompressedFile(&context, request));
+    std::unique_ptr<ClientReader<FileInfo>> writer(stub_->GetCompressedFile(&context, request));
 }
 
 void FileClient::getFileInfoVector()
 {
     ClientContext context;
     ClientRequest request;
-    std::unique_ptr<ClientReader<Chunk>> writer(stub_->getFileInfoVector(&context, request)); 
+    std::unique_ptr<ClientReader<Chunk>> writer(stub_->GetFileInfoVector(&context, request)); 
 }

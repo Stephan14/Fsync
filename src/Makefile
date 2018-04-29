@@ -97,4 +97,4 @@ $(OBJSDIR)/%.o : %.cc
 
 .PHONY: clean
 clean:
-	-rm -f object/*.o  server_main#忽略当前行命名执行时遇到的错误
+	-rm -f .obj/*.o  server_main#忽略当前行命名执行时遇到的错误

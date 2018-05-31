@@ -85,11 +85,11 @@ Prepare::~Prepare()
 {
 }
 
-std::map<std::string, FileInfo> Prepare::prepare()
+std::map<std::string, FileInfo> Prepare::PrepareAdvance()
 {
-    File zstdFile(path + "/zstdfile");
+    File zstdFile(Path + "/zstdfile");
     std::map<std::string, FileInfo> infoMap; 
-    if(zstdFile.isExist() && loadZstdFile(zstdFile, infoMap))
+    if(zstdFile.isExist() && LoadZstdFile(zstdFile, infoMap))
         return infoMap;
     else
 
@@ -97,13 +97,13 @@ std::map<std::string, FileInfo> Prepare::prepare()
 }
 
 
-bool Prepare::loadZstdFile(const File& path, std::map<std::string, FileInfo>& infoMap) const
+bool Prepare::LoadZstdFile(const File& path, std::map<std::string, FileInfo>& infoMap) const
 {
     return true;
     
 }
 
-bool Prepare::getAllFileInfo(const File& path, std::map<std::string, FileInfo>& infoMap) const
+bool Prepare::GetAllFileInfo(const File& path, std::map<std::string, FileInfo>& infoMap) const
 {
     return true;
 }

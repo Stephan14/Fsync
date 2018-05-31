@@ -23,11 +23,11 @@ class Prepare
     Prepare();
     ~Prepare();
 
-    std::map<std::string, FileServerInternal::FileInfo> prepare();
+    std::map<std::string, FileServerInternal::FileInfo> PrepareAdvance();
     private:
-    bool loadZstdFile(const File& path, std::map<std::string, FileServerInternal::FileInfo>& infoMap) const;
-    bool getAllFileInfo(const File& path, std::map<std::string, FileServerInternal::FileInfo>& infoMap) const;
+    bool LoadZstdFile(const File& path, std::map<std::string, FileServerInternal::FileInfo>& infoMap) const;
+    bool GetAllFileInfo(const File& path, std::map<std::string, FileServerInternal::FileInfo>& infoMap) const;
 
-    std::string path;
+    std::string Path;
 };
 #endif

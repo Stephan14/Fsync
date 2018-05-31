@@ -3,15 +3,16 @@
 #include <iostream>  
 #include <pthread.h>  
   
+//放到类外公共使用
+enum ThreadState {
+    THREAD_STATUS_NEW,
+    THREAD_STATUS_RUNNING,
+    THREAD_STATUS_EXIT
+};
   
 class Thread  
 {  
 public:  
-    enum ThreadState {
-        THREAD_STATUS_NEW,
-        THREAD_STATUS_RUNNING,
-        THREAD_STATUS_EXIT
-    };
     
     //构造函数  
     Thread();  
@@ -24,7 +25,7 @@ public:
     //获取线程ID  
     pthread_t GetThreadID();  
     //获取线程状态  
-    int GetState();  
+    ThreadState GetState();  
     //等待线程直至退出  
     void Join();  
 

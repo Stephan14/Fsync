@@ -23,7 +23,7 @@ pthread_t Thread::GetThreadID()
     return pid_;  
 }  
   
-int Thread::GetState()  
+ThreadState Thread::GetState()  
 {  
     return state_;  
 }  

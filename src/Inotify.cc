@@ -45,7 +45,7 @@ bool Inotify::HandleEvent()
         size_t handled_num = 0;
         while (handled_num < read_num) {
             current_event = (struct inotify_event *)&buffer[handled_num];
-            event_size = offsetof (struct inotify_event, name) + current_event->len; 
+            event_size = offsetof (struct inotify_event, name) + current_event->len;
             for (int i=0; i < 12; i++) {
                 if ((current_event->mask >> i) & 1) {
                     if (current_event->len > 0)

@@ -7,21 +7,21 @@
 #include <string>
 #include <map>
 
-std::string EVENT_NAME[12] =  
-{  
-    "IN_ACCESS",  
-    "IN_MODIFY",        //文件修改  
-    "IN_ATTRIB",  
-    "IN_CLOSE_WRITE",  
-    "IN_CLOSE_NOWRITE",  
-    "IN_OPEN",  
-    "IN_MOVED_FROM",    //文件移动from  
-    "IN_MOVED_TO",      //文件移动to  
-    "IN_CREATE",        //文件创建  
-    "IN_DELETE",        //文件删除  
-    "IN_DELETE_SELF",  
-    "IN_MOVE_SELF"  
-}; 
+std::string EVENT_NAME[12] =
+{
+    "IN_ACCESS",
+    "IN_MODIFY",        //文件修改
+    "IN_ATTRIB",
+    "IN_CLOSE_WRITE",
+    "IN_CLOSE_NOWRITE",
+    "IN_OPEN",
+    "IN_MOVED_FROM",    //文件移动from
+    "IN_MOVED_TO",      //文件移动to
+    "IN_CREATE",        //文件创建
+    "IN_DELETE",        //文件删除
+    "IN_DELETE_SELF",
+    "IN_MOVE_SELF"
+};
 
 class Inotify
 {

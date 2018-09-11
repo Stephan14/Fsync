@@ -21,7 +21,7 @@ message Chunk
         int64          buffer_size_     = 5;
 }
 
-message FileInfo 
+message FileInfo
 {
         string         path_        = 1;
         int64          size_        = 2;

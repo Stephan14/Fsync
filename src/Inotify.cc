@@ -35,7 +35,7 @@ bool Inotify::AddWatchEvent(const std::string& path, uint32_t event)
     }
 }
 
-bool Inotify::HandleEvent()
+void Inotify::Run()
 {
     char buffer[4096] = {0};
     ssize_t read_num = 0, event_size = 0;

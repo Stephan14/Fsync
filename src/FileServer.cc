@@ -1,6 +1,5 @@
 #include "FileServer.h"
 
-    
 using grpc::ServerContext;
 using grpc::ServerWriter;
 using grpc::Status;
@@ -9,11 +8,23 @@ using FileServerInternal::ClientRequest;
 using FileServerInternal::FileInfo;
 using FileServerInternal::Chunk;
 
-void FileServer::prepare()
+void FileServer::Init()
 {
-    std::cout << "prepare" << std::endl; 
+    std::cout << "init start" << std::endl;
+    inotify_thread.Init();
+    inotify_thread.AddWatchEvent("/home/zoushengfu/code/Fsync/Fsync/src", IN_CREATE|IN_DELETE|IN_MOVED_FROM|IN_MOVED_TO);
+    std::cout << "init start" << std::endl;
 }
 
+void FileServer::Start()
+{
+    inotify_thread.Start();
+}
+
+void FileServer::Join()
+{
+    inotify_thread.Join();
+}
 
 Status FileServer::getCompressedFile(ServerContext* context, const ClientRequest* request, ServerWriter<FileInfo>* writer)
 {

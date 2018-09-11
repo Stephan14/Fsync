@@ -18,6 +18,7 @@
 
 #include "Server.grpc.pb.h"
 
+#include "Inotify.h"
 
 class FileServer final : public FileServerInternal::Server::Service
 {
@@ -25,10 +26,13 @@ class FileServer final : public FileServerInternal::Server::Service
     FileServer() = default;
     ~FileServer() = default;
 
-    void prepare();
+    void Init();
+    void Start();
+    void Join();
     grpc::Status getCompressedFile(grpc::ServerContext* context, const FileServerInternal::ClientRequest* request, grpc::ServerWriter<FileServerInternal::FileInfo>* writer);
     grpc::Status getFileInfoVector(grpc::ServerContext* context, const FileServerInternal::ClientRequest* request, grpc::ServerWriter<FileServerInternal::Chunk>* writer);
 
     private:
+    Inotify inotify_thread;
 };
 #endif

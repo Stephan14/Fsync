@@ -7,7 +7,9 @@
 #include <string>
 #include <map>
 
-std::string EVENT_NAME[12] =
+#include "Thread.h"
+
+static std::string EVENT_NAME[12] =
 {
     "IN_ACCESS",
     "IN_MODIFY",        //文件修改
@@ -23,7 +25,7 @@ std::string EVENT_NAME[12] =
     "IN_MOVE_SELF"
 };
 
-class Inotify
+class Inotify: public Thread
 {
     public:
     Inotify();
@@ -31,14 +33,14 @@ class Inotify
 
     bool Init();
     bool AddWatchEvent(const std::string& path, uint32_t event);
-    bool HandleEvent();
+    virtual void Run();
     private:
     std::map<std::string, uint32_t> watch_dir_event_map_;
     //TODO 防止事件丢失
     //std::queue<inotify_event> InotifyEventQue;
     std::vector<int> watch_fd_vec_;
     int inotify_fd_;
-    bool stop_; 
+    bool stop_;
 };
 
 #endif

@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <string.h>
 
+std::time_t  getCurrentTime() {
+    return std::time(0);
+}
+
 File::File(const std::string& pt, char* md):path_(pt), fd_(NULL)
 {
     mode_ = new char[strlen(md) + 1];//注意长度

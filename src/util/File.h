@@ -20,6 +20,10 @@
 #include <sys/stat.h>
 #include <sys/fcntl.h>
 #include <unistd.h> //for close()
+#include <ctime>
+
+//get current time
+std::time_t getCurrentTime();
 class File
 {
 

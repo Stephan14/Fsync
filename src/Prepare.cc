@@ -4,6 +4,7 @@
 
 #include <dirent.h>
 
+using namespace std;
 
 using FileServerInternal::FileInfo;
 
@@ -100,7 +101,6 @@ std::map<std::string, FileInfo> Prepare::PrepareAdvance()
 bool Prepare::LoadZstdFile(const File& path, std::map<std::string, FileInfo>& infoMap) const
 {
     return true;
-    
 }
 
 bool Prepare::GetAllFileInfo(const File& path, std::map<std::string, FileInfo>& infoMap) const

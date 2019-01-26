@@ -6,6 +6,7 @@
 
 #include <map>
 #include <string>
+#include <iostream>
 
 
 bool GetAllFiles(const std::string& path, std::vector<std::string>& allFiles);
